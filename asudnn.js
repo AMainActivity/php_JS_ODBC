@@ -8,12 +8,15 @@
 	}
 	
 	function onLoad() {
+		var months=['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+		var days= ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+		
 		$("#dpStart").datepicker({
 			onSelect: function(date) {},
 			showAnim: "slideDown",
 			dateFormat: 'dd.mm.yy',
-					monthNames : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-					dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+					monthNames : months,
+					dayNamesMin: days,
 					firstDay: 1
 		});				
 		$("#dpStart").datepicker("setDate", -1)
@@ -22,8 +25,8 @@
 			onSelect: function(date) {},
 			showAnim: "slideDown",
 			dateFormat: 'dd.mm.yy',
-					monthNames : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-					dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+					monthNames : months,
+					dayNamesMin: days,
 					firstDay: 1
 		});				
 		$('#dpEnd').datepicker('setDate', 'today');
@@ -69,34 +72,13 @@
 		var inDestName =  document.getElementById('inDestName');
 		var inSourceProdName =  document.getElementById('inSourceProdName');
 		var inDestProdName =  document.getElementById('inDestProdName');
-		inSourseName.oninput = function() {
-			var arr = res.filter(function (el) {
-				return el.SourceName.toLowerCase().indexOf(inSourseName.value.toLowerCase()) !== -1 && 
-						el.DestinationName.toLowerCase().indexOf(inDestName.value.toLowerCase()) !== -1 && 
-						el.SourceProduct.toLowerCase().indexOf(inSourceProdName.value.toLowerCase()) !== -1 && 
-						el.DestProduct.toLowerCase().indexOf(inDestProdName.value.toLowerCase()) !== -1
-			});	
-		filTable(arr);
-		};  
-		inDestName.oninput = function() {
-			var arr = res.filter(function (el) {
-				return el.SourceName.toLowerCase().indexOf(inSourseName.value.toLowerCase()) !== -1 && 
-						el.DestinationName.toLowerCase().indexOf(inDestName.value.toLowerCase()) !== -1 && 
-						el.SourceProduct.toLowerCase().indexOf(inSourceProdName.value.toLowerCase()) !== -1 && 
-						el.DestProduct.toLowerCase().indexOf(inDestProdName.value.toLowerCase()) !== -1
-			});	
-		filTable(arr);
-		};
-		inSourceProdName.oninput = function() {
-			var arr = res.filter(function (el) {
-				return el.SourceName.toLowerCase().indexOf(inSourseName.value.toLowerCase()) !== -1 && 
-						el.DestinationName.toLowerCase().indexOf(inDestName.value.toLowerCase()) !== -1 && 
-						el.SourceProduct.toLowerCase().indexOf(inSourceProdName.value.toLowerCase()) !== -1 && 
-						el.DestProduct.toLowerCase().indexOf(inDestProdName.value.toLowerCase()) !== -1
-			});	
-		filTable(arr);
-		};
-		inDestProdName.oninput = function() {
+		inSourseName.oninput = forFilter;  
+		inDestName.oninput = forFilter;
+		inSourceProdName.oninput = forFilter;
+		inDestProdName.oninput = forFilter;
+	}
+	
+	var forFilter= function() {
 			var arr = res.filter(function (el) {
 				return el.SourceName.toLowerCase().indexOf(inSourseName.value.toLowerCase()) !== -1 && 
 						el.DestinationName.toLowerCase().indexOf(inDestName.value.toLowerCase()) !== -1 && 
@@ -104,8 +86,7 @@
 						el.DestProduct.toLowerCase().indexOf(inDestProdName.value.toLowerCase()) !== -1
 		});	
 		filTable(arr);
-		};  
-	}
+	} ;
 	
 	function filTable(mJsonData)
 	{		
