@@ -4,7 +4,7 @@
 	var res;
 	
 	function backMain(){
-		window.open("http://10.16.15.46:555","_self");
+		window.open("http://1.1.1.1:1","_self");
 	}
 	
 	function onLoad() {
