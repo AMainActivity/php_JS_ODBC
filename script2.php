@@ -7,10 +7,8 @@ header( 'Content-Type: text/html; charset=utf-8' );
 		$mEnd = $_POST['mEnd'];
         include_once 'config.php';
 		$dsn="DRIVER={SQL Server};SERVER=".DB_HOST.";DATABASE=".DB_NAME;
-		$username=DB_USERNAME;
-		$password=DB_PASSWORD;
 		/*
-		$conn=odbc_connect($dsn, $username, $password);
+		$conn=odbc_connect($dsn, DB_USERNAME, DB_PASSWORD);
 		if( $conn === false )
 		{ die( FormatErrors(sqlsrv_errors()) ); }
 		*/
@@ -30,25 +28,25 @@ header( 'Content-Type: text/html; charset=utf-8' );
 		$sql="";
 		$sql.=" SELECT * from ";
 		$sql.="( ";
-		$sql.=" SELECT     [iomsdb_test].[oms].[Transfer].TransferUID, [iomsdb_test].[oms].[Transfer].StartTime, [iomsdb_test].[oms].[Transfer].EndTime, ObjectSource.ObjectName AS SourceName, "; 
+		$sql.=" SELECT     [".DB_NAME."].[oms].[Transfer].TransferUID, [".DB_NAME."].[oms].[Transfer].StartTime, [".DB_NAME."].[oms].[Transfer].EndTime, ObjectSource.ObjectName AS SourceName, "; 
 		$sql.="                      ObjectDestination.ObjectName AS DestinationName, ProductSource.ProductName AS SourceProduct,  ";
 		$sql.="                      ProductDestination.ProductName AS DestProduct,  ";
-		$sql.="                [iomsdb_test].[oms].[Transfer].[SourceFlow], [iomsdb_test].[oms].[Transfer].[DestFlow], [iomsdb_test].[oms].[Transfer].[SourceMass], [iomsdb_test].[oms].[Transfer].[DestinationMass], ";
-		$sql.="				[iomsdb_test].[oms].[Transfer].ShiftMasses, [iomsdb_test].[oms].[Transfer].SourceTagMass, [iomsdb_test].[oms].[Transfer].DestTagMass, ";
-		$sql.="				[iomsdb_test].[oms].[Transfer].SourceMassManualInput, [iomsdb_test].[oms].[Transfer].DestinationMassManualInput ";
+		$sql.="                [".DB_NAME."].[oms].[Transfer].[SourceFlow], [".DB_NAME."].[oms].[Transfer].[DestFlow], [".DB_NAME."].[oms].[Transfer].[SourceMass], [".DB_NAME."].[oms].[Transfer].[DestinationMass], ";
+		$sql.="				[".DB_NAME."].[oms].[Transfer].ShiftMasses, [".DB_NAME."].[oms].[Transfer].SourceTagMass, [".DB_NAME."].[oms].[Transfer].DestTagMass, ";
+		$sql.="				[".DB_NAME."].[oms].[Transfer].SourceMassManualInput, [".DB_NAME."].[oms].[Transfer].DestinationMassManualInput ";
 		$sql.=" FROM         oms.Transfer INNER JOIN ";
-		$sql.="                      oms.Object AS ObjectSource ON [iomsdb_test].[oms].[Transfer].SourceUID = ObjectSource.ObjectUID INNER JOIN ";
-		$sql.="                      oms.Object AS ObjectDestination ON [iomsdb_test].[oms].[Transfer].DestinationUID = ObjectDestination.ObjectUID LEFT OUTER JOIN ";
-		$sql.="                      oms.Product AS ProductDestination ON [iomsdb_test].[oms].[Transfer].DestProductUID = ProductDestination.ProductUID LEFT OUTER JOIN ";
-		$sql.="                      oms.Product AS ProductSource ON [iomsdb_test].[oms].[Transfer].SourceProductUID = ProductSource.ProductUID LEFT OUTER JOIN";
-		$sql.="                      oms.Product AS Product ON [iomsdb_test].[oms].[Transfer].ProductUID = Product.ProductUID ";
+		$sql.="                      oms.Object AS ObjectSource ON [".DB_NAME."].[oms].[Transfer].SourceUID = ObjectSource.ObjectUID INNER JOIN ";
+		$sql.="                      oms.Object AS ObjectDestination ON [".DB_NAME."].[oms].[Transfer].DestinationUID = ObjectDestination.ObjectUID LEFT OUTER JOIN ";
+		$sql.="                      oms.Product AS ProductDestination ON [".DB_NAME."].[oms].[Transfer].DestProductUID = ProductDestination.ProductUID LEFT OUTER JOIN ";
+		$sql.="                      oms.Product AS ProductSource ON [".DB_NAME."].[oms].[Transfer].SourceProductUID = ProductSource.ProductUID LEFT OUTER JOIN";
+		$sql.="                      oms.Product AS Product ON [".DB_NAME."].[oms].[Transfer].ProductUID = Product.ProductUID ";
 		$sql.=") tbl                       ";
 		$sql.="                Where ";
 		$sql.="               (tbl.SourceName <> tbl.DestinationName) AND";
 		$sql.="               tbl.StartTime >= :startT AND tbl.StartTime <= :endT AND";
 		$sql.="               (tbl.EndTime <= :endT2 OR tbl.EndTime IS NULL) ORDER BY tbl.StartTime, tbl.EndTime";
 		
-		$dsn2 ="odbc:DRIVER={SQL Server};SERVER=pisql3;DATABASE=iomsdb_test;UID=".$username.";PWD=".$password."";
+		$dsn2 ="odbc:DRIVER={SQL Server};SERVER=".DB_HOST.";DATABASE=".DB_NAME.";UID=".DB_USERNAME.";PWD=".DB_PASSWORD."";
 		try {
 			$dbh = new PDO($dsn2);
 			$dateStart = date("Y-m-d H:i:s", strtotime($mStart." 12:00:00"));
